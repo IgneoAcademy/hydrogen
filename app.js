@@ -1,4 +1,9 @@
 var express = require('express'); // Express framework
+var app = express();
+if (app.get("env") == "development") {
+  require('./config/env'); // Load environment if in development mode
+}
+
 var path = require('path'); // Simple module for handling file system paths
 var favicon = require('serve-favicon'); // Serves the favicon
 var logger = require('morgan'); // Not sure
@@ -6,15 +11,13 @@ var cookieParser = require('cookie-parser'); // Parses cookies
 var bodyParser = require('body-parser'); // Parses body
 var connectAssets = require('connect-assets'); // Asset pipeline
 var mongoose = require('mongoose'); // MongoDB Schemas
+var secrets = require('./config/secrets.js'); // Secret values from env vars
 var session = require('express-session'); // Express sessions
-var passport = require('passport'); // Authentication
-var secrets = require('./config/secrets.js'); // API keys, passwords, etc. 
+var passport = require('passport'); // Authentication 
 var passportConfig = require ('./config/passport.js'); // Passport configuration
 
 var routes = require('./routes/index'); // Routes under '/'
 // var users = require('./routes/users'); // Routes under '/users'
-
-var app = express();
 
 /**
  * Connect to MongoDB.
