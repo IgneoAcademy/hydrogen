@@ -3,6 +3,9 @@ var GitHubStrategy = require('passport-github').Strategy;
 var secrets = require('./secrets.js');
 var User = require('../models/User');
 
+// Passport serialization and deserialization of user ID into user object
+// This is done so only the user ID is stored in the session instead of the
+// whole user object, which may become very large. 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });

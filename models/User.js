@@ -17,6 +17,7 @@ var userSchema = new mongoose.Schema({
 
 /**
  * Helper method for getting user's gravatar.
+ * Code from Hackathon Starter.
  */
 userSchema.methods.gravatar = function(size) {
   if (!size) size = 200;

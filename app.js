@@ -1,9 +1,8 @@
 var express = require('express'); // Express framework
 var app = express();
-if (app.get("env") == "development") {
-  require('./config/env'); // Load environment if in development mode
+if (app.get('env') == 'development') {
+  require('./config/env'); // Load environment if in development mode.
 }
-
 var path = require('path'); // Simple module for handling file system paths
 var favicon = require('serve-favicon'); // Serves the favicon
 var logger = require('morgan'); // Not sure
@@ -24,29 +23,33 @@ var routes = require('./routes/index'); // Routes under '/'
  */
 mongoose.connect(secrets.db);
 mongoose.connection.on('error', function() {
-  console.error('MongoDB Connection Error. Please make sure that MongoDB is running.');
+  console.error('MongoDB Connection Error. Make sure MongoDB is running.');
 });
 
 /**
  * Views
  */
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'jade'); // Use the Jade templating engine
 
 /**
  * Configuration
  */
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-// Rails-like asset pipeline with connect-assets. Compiles .less files automatically.
+
+// Rails-like asset pipeline with connect-assets.
+// Compiles .less files automatically.
 app.use(connectAssets({
-  paths: [path.join(__dirname, 'public/stylesheets'), path.join(__dirname, 'public/javascripts')]
+  paths: [path.join(__dirname, 'assets/stylesheets'), // CSS
+  path.join(__dirname, 'assets/javascripts')] // Javascript
 }));
-// Leave public routes open for fonts
+
+// Leave public routes open for fonts and images
 app.use(express.static(path.join(__dirname, 'public')));
 // Use express sessions (required for passport sessions)
 app.use(session({
@@ -61,19 +64,16 @@ app.use(passport.session());
 /**
  * Routes
  */
-app.get('/', passportConfig.ensureAuthenticated, routes);
+app.get('/', passportConfig.ensureAuthenticated, routes); // Requires login
 app.get('/welcome', routes);
+
+// Github Oauth
 app.get('/auth/github', passport.authenticate('github'));
 app.get('/auth/github/callback', passport.authenticate('github',
   { successRedirect: '/', failureRedirect: '/welcome' }), function(req, res) {
     res.redirect(req.session.returnTo || '/');
   }
 );
-// app.get('/auth/github/callback', passport.authenticate('github'), {failureRedirect: '/welcome'},
-//   function(req, res) {
-//     res.redirect(req.session.returnTo || '/');
-//   }
-// );
 
 /** 
  * Errors
@@ -87,8 +87,7 @@ app.use(function(req, res, next) {
 
 // error handlers
 
-// development error handler
-// will print stacktrace
+// development error handler - will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
@@ -99,8 +98,7 @@ if (app.get('env') === 'development') {
   });
 }
 
-// production error handler
-// no stacktraces leaked to user
+// production error handler - no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
@@ -108,6 +106,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;
