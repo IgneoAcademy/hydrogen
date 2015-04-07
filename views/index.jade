@@ -1,5 +1,11 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  include partials/header
+  .container-fluid.top
+    .row
+      .col-sm-2
+        p Sidebar here
+      .col-sm-10
+        h1 Content here
+        p hey
