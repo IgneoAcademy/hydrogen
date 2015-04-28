@@ -16,6 +16,7 @@ var passport = require('passport'); // Authentication
 var passportConfig = require ('./config/passport.js'); // Passport configuration
 
 var routes = require('./routes/index'); // Routes under '/'
+
 // var users = require('./routes/users'); // Routes under '/users'
 
 /**
@@ -74,6 +75,12 @@ app.get('/auth/github/callback', passport.authenticate('github',
     res.redirect(req.session.returnTo || '/');
   }
 );
+
+// Logout
+app.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/welcome');
+});
 
 /** 
  * Errors
